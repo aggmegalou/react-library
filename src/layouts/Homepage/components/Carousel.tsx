@@ -30,11 +30,11 @@ export const Carousel = () => {
                     </div>
                     <div className="carousel-item">
                         <div className="row d-dlex justify-content-center align-items-center">
-                            <div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 mb-3">
+                            
                                 <ReturnBook/>
                                 <ReturnBook/>
                                 <ReturnBook/>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
