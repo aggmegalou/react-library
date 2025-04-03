@@ -13,12 +13,20 @@ export const SearchBooksPage = () => {
     const[booksPerPage] = useState(5);
     const[totalAmountOfBooks, setTotalAmountOfBooks] = useState(0);
     const[totalPages,setTotalPages] = useState(0);
+    const[search, setSearch] = useState('');
+    const[searchUrl, setSearchUrl] = useState('');
 
     useEffect(() => {
         const fetchBooks = async () => {
             const baseUrl: string = "http://localhost:8080/api/books";
 
-            const url: string = `${baseUrl}?page=${currentPage-1}&size=${booksPerPage}`;
+            let  url: string = '';
+
+            if(searchUrl ===''){
+                url = `${baseUrl}?page=${currentPage-1}&size=${booksPerPage}`;
+            }else{
+                url = baseUrl + searchUrl;
+            }
 
             const response = await fetch(url);
             if (!response.ok) {
@@ -55,7 +63,7 @@ export const SearchBooksPage = () => {
         })
 
         window.scrollTo(0,0); // each time this use effect gets kicked off, we 're going to scroll the page to the top
-    }, [currentPage]); // each time current page changes, we want to recall this hook
+    }, [currentPage, searchUrl]); // each time current page changes, we want to recall this hook
 
     if (isLoading) {
         return (
@@ -70,6 +78,14 @@ export const SearchBooksPage = () => {
                 <p>{httpError}</p>
             </div>
         )
+    }
+
+    const searchHandleChange = () => {
+        if (search === ''){
+            setSearchUrl('');
+        }else{
+            setSearchUrl(`/search/findByTitleContaining?title=${search}&page=0&size=${booksPerPage}`)
+        }
     }
 
     const indexOfLastBook: number = currentPage * booksPerPage;
@@ -87,8 +103,10 @@ export const SearchBooksPage = () => {
                         <div className= 'col-6'>
                             <div className='d-flex'>
                                 <input className= 'form-control me-2' type='search'
-                                    placeholder='Search' aria-labelledby='Search' />
-                                <button className='btn btn-outline-success'>
+                                    placeholder='Search' aria-labelledby='Search'
+                                    onChange={e => setSearch(e.target.value)} />
+                                <button className='btn btn-outline-success'
+                                 onClick={() => searchHandleChange()}>
                                     Search
                                 </button>    
 
